@@ -38,8 +38,8 @@ Para rodar o projeto, siga os passos abaixo:
 
 **1. Clone o Repositório**
 ```bash
-git clone <URL_DO_SEU_REPOSITORIO>
-cd <NOME_DA_PASTA>
+git https://github.com/lwcxss/erp.git
+cd <CAMINHO_DA_PASTA>
 ```
 
 **2. Crie e Ative um Ambiente Virtual**
