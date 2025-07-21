@@ -11,6 +11,10 @@ class MercadoRepositorio:
     def adicionar_produto(self, produto_dict):
         self.tabela_produtos.insert(produto_dict)
 
+    def remover_produto(self, doc_id):
+        if self.tabela_produtos and self.tabela_produtos.contains(doc_id=doc_id):
+            self.tabela_produtos.remove(doc_ids=[doc_id])
+
     def listar_produtos(self):
         return self.tabela_produtos.all()
 

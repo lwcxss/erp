@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from database import MercadoRepositorio
 import datetime
+import time
 
 # --- CONFIGURAÇÃO DA PÁGINA E REPOSITÓRIO ---
 
@@ -39,31 +40,46 @@ def pagina_pdv():
 
         st.info(f"Estoque disponível de {produto_obj['nome']}: **{produto_obj['estoque']}**")
         
-        quantidade = st.number_input("Quantidade", min_value=1, max_value=int(produto_obj['estoque']), value=1, step=1)
+        # Garante que o input de quantidade não ultrapasse o estoque
+        max_estoque = int(produto_obj['estoque'])
+        if max_estoque > 0:
+            quantidade = st.number_input("Quantidade", min_value=1, max_value=max_estoque, value=1, step=1)
 
-        if st.button("➕ Adicionar ao Carrinho"):
-            if quantidade > 0:
-                item_venda = {
-                    'produto_id': produto_id,
-                    'nome_produto': produto_obj['nome'],
-                    'quantidade': quantidade,
-                    'preco_unitario': produto_obj['preco'],
-                    'subtotal': produto_obj['preco'] * quantidade
-                }
-                st.session_state.carrinho.append(item_venda)
-                st.session_state.total_venda += item_venda['subtotal']
-                st.rerun()
-            else:
-                st.error("A quantidade deve ser maior que zero.")
+            if st.button("➕ Adicionar ao Carrinho"):
+                if quantidade > 0:
+                    item_venda = {
+                        'produto_id': produto_id,
+                        'nome_produto': produto_obj['nome'],
+                        'quantidade': quantidade,
+                        'preco_unitario': produto_obj['preco'],
+                        'subtotal': produto_obj['preco'] * quantidade
+                    }
+                    st.session_state.carrinho.append(item_venda)
+                    st.session_state.total_venda += item_venda['subtotal']
+                    st.rerun()
+                else:
+                    st.error("A quantidade deve ser maior que zero.")
+        else:
+            st.error("Produto sem estoque.")
+
 
     with col2:
         st.header("Carrinho")
         if not st.session_state.carrinho:
             st.info("O carrinho está vazio.")
         else:
-            df_carrinho = pd.DataFrame(st.session_state.carrinho)
-            st.dataframe(df_carrinho[['nome_produto', 'quantidade', 'preco_unitario', 'subtotal']],
-                         hide_index=True)
+            # --- LÓGICA DE EXIBIÇÃO E REMOÇÃO DO CARRINHO ---
+            for i, item in enumerate(st.session_state.carrinho):
+                col_item, col_botao = st.columns([4, 1])
+                with col_item:
+                    st.text(f"{item['nome_produto']} (x{item['quantidade']})")
+                    st.caption(f"Subtotal: R$ {item['subtotal']:.2f}")
+                with col_botao:
+                    # Botão para remover o item específico
+                    if st.button("➖", key=f"remover_{i}", help="Remover item", use_container_width=True):
+                        item_removido = st.session_state.carrinho.pop(i)
+                        st.session_state.total_venda -= item_removido['subtotal']
+                        st.rerun()
             
             st.subheader(f"Total: R$ {st.session_state.total_venda:.2f}")
 
@@ -84,7 +100,6 @@ def pagina_pdv():
                 st.session_state.total_venda = 0.0
                 
                 st.balloons()
-                import time
                 time.sleep(2)
                 st.rerun()
 
@@ -97,9 +112,7 @@ def pagina_estoque():
         return
         
     df = pd.DataFrame(produtos)
-    
     df['id'] = [p.doc_id for p in produtos]
-    
     df = df[['id', 'nome', 'preco', 'estoque']]
     
     st.dataframe(df, hide_index=True, use_container_width=True)
@@ -125,7 +138,11 @@ def pagina_adicionar_produto():
 # --- NAVEGAÇÃO PRINCIPAL (SIDEBAR) ---
 
 st.sidebar.title("Navegação")
-pagina_selecionada = st.sidebar.radio("Escolha uma página", ["Ponto de Venda", "Ver Estoque", "Adicionar Produto"])
+# Removemos a página extra da navegação
+pagina_selecionada = st.sidebar.radio(
+    "Escolha uma página", 
+    ["Ponto de Venda", "Ver Estoque", "Adicionar Produto"]
+)
 
 if pagina_selecionada == "Ponto de Venda":
     pagina_pdv()

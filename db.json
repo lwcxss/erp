@@ -3,7 +3,7 @@
         "1": {
             "nome": "Coca Cola",
             "preco": 3.0,
-            "estoque": 8
+            "estoque": 0
         },
         "2": {
             "nome": "Batata Ruffles",
@@ -19,6 +19,11 @@
             "nome": "Malboro",
             "preco": 10.0,
             "estoque": 9
+        },
+        "5": {
+            "nome": "Camiseta Blink Company",
+            "preco": 89.9,
+            "estoque": 13
         }
     },
     "vendas": {
@@ -48,6 +53,52 @@
                 }
             ],
             "total_venda": 19.0
+        },
+        "2": {
+            "data_venda": "2025-07-21T10:55:10.063507",
+            "itens": [
+                {
+                    "produto_id": 1,
+                    "nome_produto": "Coca Cola",
+                    "quantidade": 2,
+                    "preco_unitario": 3.0,
+                    "subtotal": 6.0
+                }
+            ],
+            "total_venda": 6.0
+        },
+        "3": {
+            "data_venda": "2025-07-21T11:03:29.628281",
+            "itens": [
+                {
+                    "produto_id": 1,
+                    "nome_produto": "Coca Cola",
+                    "quantidade": 3,
+                    "preco_unitario": 3.0,
+                    "subtotal": 9.0
+                },
+                {
+                    "produto_id": 5,
+                    "nome_produto": "Camiseta Blink Company",
+                    "quantidade": 3,
+                    "preco_unitario": 89.9,
+                    "subtotal": 269.70000000000005
+                }
+            ],
+            "total_venda": 278.70000000000005
+        },
+        "4": {
+            "data_venda": "2025-07-21T11:25:20.699877",
+            "itens": [
+                {
+                    "produto_id": 1,
+                    "nome_produto": "Coca Cola",
+                    "quantidade": 3,
+                    "preco_unitario": 3.0,
+                    "subtotal": 9.0
+                }
+            ],
+            "total_venda": 9.0
         }
     }
 }
