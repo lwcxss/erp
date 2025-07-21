@@ -9,9 +9,8 @@ class MercadoRepositorio:
     # --- MÉTODOS PARA PRODUTOS ---
 
     def adicionar_produto(self, produto_dict):
-        # Remove chaves vazias ou nulas antes de inserir
         produto_limpo = {k: v for k, v in produto_dict.items() if v is not None and k != 'doc_id'}
-        if produto_limpo.get('nome'): # Garante que o produto tenha um nome
+        if produto_limpo.get('nome'):
             return self.tabela_produtos.insert(produto_limpo)
         return None
 
@@ -38,8 +37,11 @@ class MercadoRepositorio:
     def deletar_produto(self, doc_id):
         self.tabela_produtos.remove(doc_ids=[doc_id])
 
-
     # --- MÉTODOS PARA VENDAS ---
 
     def registrar_venda(self, venda_dict):
         self.tabela_vendas.insert(venda_dict)
+
+    def listar_vendas(self):
+        """ Retorna todas as vendas registradas. """
+        return self.tabela_vendas.all()
