@@ -1,29 +1,144 @@
 {
     "produtos": {
         "1": {
-            "nome": "Coca Cola",
-            "preco": 3.0,
-            "estoque": 0
+            "nome": "Coca Cola 2L",
+            "preco": 9.5,
+            "estoque": 43
         },
         "2": {
-            "nome": "Batata Ruffles",
-            "preco": 5.0,
-            "estoque": 10
+            "nome": "Batata Ruffles 70g",
+            "preco": 7.8,
+            "estoque": 60
         },
         "3": {
-            "nome": "Chocolate Alpino",
-            "preco": 3.0,
-            "estoque": 9
+            "nome": "Chocolate Alpino 85g",
+            "preco": 6.5,
+            "estoque": 68
         },
         "4": {
-            "nome": "Malboro",
-            "preco": 10.0,
-            "estoque": 9
+            "nome": "Cigarro Malboro Vermelho",
+            "preco": 12.0,
+            "estoque": 30
         },
         "5": {
             "nome": "Camiseta Blink Company",
             "preco": 89.9,
-            "estoque": 13
+            "estoque": 11
+        },
+        "6": {
+            "nome": "Produto Sem Estoque",
+            "preco": 3.5,
+            "estoque": 0
+        },
+        "7": {
+            "nome": "Suco de Laranja Del Valle 1L",
+            "preco": 8.0,
+            "estoque": 25
+        },
+        "8": {
+            "nome": "Energético Red Bull 250ml",
+            "preco": 9.0,
+            "estoque": 40
+        },
+        "9": {
+            "nome": "Cerveja Heineken Long Neck",
+            "preco": 6.0,
+            "estoque": 72
+        },
+        "10": {
+            "nome": "Água Mineral 500ml",
+            "preco": 2.5,
+            "estoque": 150
+        },
+        "11": {
+            "nome": "Salgadinho Doritos 84g",
+            "preco": 8.5,
+            "estoque": 55
+        },
+        "12": {
+            "nome": "Amendoim Japonês Mendorato 150g",
+            "preco": 5.0,
+            "estoque": 48
+        },
+        "13": {
+            "nome": "Bala Fini Tubes 80g",
+            "preco": 5.5,
+            "estoque": 90
+        },
+        "14": {
+            "nome": "Goma de Mascar Trident Menta",
+            "preco": 2.0,
+            "estoque": 200
+        },
+        "15": {
+            "nome": "Pão de Forma Pullman",
+            "preco": 9.0,
+            "estoque": 18
+        },
+        "16": {
+            "nome": "Café em Pó Pilão 500g",
+            "preco": 18.9,
+            "estoque": 22
+        },
+        "17": {
+            "nome": "Açúcar Refinado União 1kg",
+            "preco": 5.8,
+            "estoque": 40
+        },
+        "18": {
+            "nome": "Arroz Tipo 1 Camil 5kg",
+            "preco": 28.0,
+            "estoque": 15
+        },
+        "19": {
+            "nome": "Feijão Carioca Kicaldo 1kg",
+            "preco": 9.9,
+            "estoque": 25
+        },
+        "20": {
+            "nome": "Sabonete Dove Original",
+            "preco": 3.8,
+            "estoque": 65
+        },
+        "21": {
+            "nome": "Shampoo Pantene 400ml",
+            "preco": 25.0,
+            "estoque": 33
+        },
+        "22": {
+            "nome": "Creme Dental Colgate Total 12",
+            "preco": 7.0,
+            "estoque": 88
+        },
+        "23": {
+            "nome": "Detergente Ypê Neutro 500ml",
+            "preco": 2.9,
+            "estoque": 110
+        },
+        "24": {
+            "nome": "Esponja de Aço Bombril",
+            "preco": 2.0,
+            "estoque": 95
+        },
+        "25": {
+            "nome": "Isqueiro Bic",
+            "preco": 8.0,
+            "estoque": 45
+        },
+        "26": {
+            "nome": "Pilhas Alcalinas AA Duracell (2 un)",
+            "preco": 15.0,
+            "estoque": 30
+        },
+        "27": {
+            "nome": "Leite Integral Italac 1L",
+            "preco": 4.99,
+            "estoque": 48
+        },
+        "28": {
+            "nome": "Barra de Cereal Nutry",
+            "preco": 2.5,
+            "estoque": 120
         }
     },
     "vendas": {
@@ -55,50 +170,51 @@
             "total_venda": 19.0
         },
         "2": {
-            "data_venda": "2025-07-21T10:55:10.063507",
+            "data_venda": "2025-07-21T16:29:14.185020",
             "itens": [
                 {
                     "produto_id": 1,
-                    "nome_produto": "Coca Cola",
-                    "quantidade": 2,
-                    "preco_unitario": 3.0,
-                    "subtotal": 6.0
+                    "nome_produto": "Coca Cola 2L",
+                    "quantidade": 1,
+                    "preco_unitario": 9.5,
+                    "subtotal": 9.5
                 }
             ],
-            "total_venda": 6.0
+            "total_venda": 9.5
         },
         "3": {
-            "data_venda": "2025-07-21T11:03:29.628281",
+            "data_venda": "2025-07-21T16:32:48.474816",
             "itens": [
                 {
+                    "produto_id": 3,
+                    "nome_produto": "Chocolate Alpino 85g",
+                    "quantidade": 12,
+                    "preco_unitario": 6.5,
+                    "subtotal": 78.0
+                },
+                {
+                    "produto_id": 25,
+                    "nome_produto": "Isqueiro Bic",
+                    "quantidade": 5,
+                    "preco_unitario": 8.0,
+                    "subtotal": 40.0
+                },
+                {
                     "produto_id": 1,
-                    "nome_produto": "Coca Cola",
-                    "quantidade": 3,
-                    "preco_unitario": 3.0,
-                    "subtotal": 9.0
+                    "nome_produto": "Coca Cola 2L",
+                    "quantidade": 1,
+                    "preco_unitario": 9.5,
+                    "subtotal": 9.5
                 },
                 {
                     "produto_id": 5,
                     "nome_produto": "Camiseta Blink Company",
-                    "quantidade": 3,
+                    "quantidade": 1,
                     "preco_unitario": 89.9,
-                    "subtotal": 269.70000000000005
+                    "subtotal": 89.9
                 }
             ],
-            "total_venda": 278.70000000000005
-        },
-        "4": {
-            "data_venda": "2025-07-21T11:25:20.699877",
-            "itens": [
-                {
-                    "produto_id": 1,
-                    "nome_produto": "Coca Cola",
-                    "quantidade": 3,
-                    "preco_unitario": 3.0,
-                    "subtotal": 9.0
-                }
-            ],
-            "total_venda": 9.0
+            "total_venda": 217.4
         }
     }
 }
