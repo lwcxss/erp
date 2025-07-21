@@ -10,12 +10,16 @@ st.set_page_config(page_title="Mercadinho PDV", page_icon="🛒", layout="wide")
 
 repo = MercadoRepositorio()
 
-# --- GERENCIAMENTO DE ESTADO (CARRINHO E DADOS) ---
+# --- GERENCIAMENTO DE ESTADO ---
 
 if 'carrinho' not in st.session_state:
     st.session_state.carrinho = []
 if 'total_venda' not in st.session_state:
     st.session_state.total_venda = 0.0
+if 'db_control_authenticated' not in st.session_state:
+    st.session_state.db_control_authenticated = False
+if 'add_product_authenticated' not in st.session_state:
+    st.session_state.add_product_authenticated = False
 
 # --- FUNÇÕES DAS PÁGINAS ---
 
@@ -80,13 +84,10 @@ def pagina_pdv():
                     repo.atualizar_estoque(item['produto_id'], item['quantidade'])
                 
                 repo.registrar_venda(venda_final)
-
                 st.success("Venda registrada com sucesso!")
                 st.balloons()
-                
                 st.session_state.carrinho = []
                 st.session_state.total_venda = 0.0
-                
                 time.sleep(2)
                 st.rerun()
 
@@ -133,6 +134,18 @@ def pagina_estoque():
 
 def pagina_adicionar_produto():
     st.title("➕ Adicionar Novo Produto")
+
+    if not st.session_state.add_product_authenticated:
+        st.warning("Esta página é protegida. Por favor, insira a senha para continuar.")
+        password = st.text_input("Senha", type="password", key="add_product_password")
+        if st.button("Acessar"):
+            if password == "musa123":
+                st.session_state.add_product_authenticated = True
+                st.rerun()
+            else:
+                st.error("Senha incorreta.")
+        return
+
     with st.form("novo_produto_form", clear_on_submit=True):
         nome = st.text_input("Nome do Produto", placeholder="Ex: Refrigerante Lata 350ml")
         preco = st.number_input("Preço (R$)", min_value=0.01, format="%.2f")
@@ -146,9 +159,64 @@ def pagina_adicionar_produto():
                 repo.adicionar_produto(novo_produto)
                 st.success(f"Produto '{nome}' adicionado com sucesso!")
 
+
 def pagina_db_control():
     st.title("⚙️ DB Control")
-    
+
+    if not st.session_state.db_control_authenticated:
+        st.warning("Esta página é protegida. Por favor, insira a senha para continuar.")
+        password = st.text_input("Senha", type="password", key="db_password")
+        if st.button("Acessar"):
+            if password == "musa123":
+                st.session_state.db_control_authenticated = True
+                st.rerun()
+            else:
+                st.error("Senha incorreta.")
+        return
+
+    # --- Seção de Análise de Vendas ---
+    st.header("Análise de Vendas")
+    vendas = repo.listar_vendas()
+
+    if not vendas:
+        st.info("Ainda não há dados de vendas para gerar análises.")
+    else:
+        # --- LÓGICA DE AGRUPAMENTO DE PRODUTOS ---
+        def get_base_name(product_name):
+            """Gera um nome base para o produto (ex: 'Coca Cola 2L' -> 'Coca Cola')."""
+            parts = product_name.split()
+            # Retorna as duas primeiras palavras ou a única palavra se houver apenas uma
+            return " ".join(parts[:2]) if len(parts) > 1 else parts[0]
+
+        dados_produtos = {}
+        for venda in vendas:
+            for item in venda['itens']:
+                # Usa o nome base como chave para agrupar
+                nome_base = get_base_name(item['nome_produto'])
+                
+                if nome_base not in dados_produtos:
+                    dados_produtos[nome_base] = {'quantidade': 0, 'total': 0.0}
+                
+                dados_produtos[nome_base]['quantidade'] += item['quantidade']
+                dados_produtos[nome_base]['total'] += item.get('subtotal', 0)
+        
+        if dados_produtos:
+            df_vendas = pd.DataFrame.from_dict(dados_produtos, orient='index')
+            df_vendas = df_vendas.sort_values(by='total', ascending=False)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.subheader("Valor Vendido (R$)")
+                st.bar_chart(df_vendas['total'], height=300)
+
+            with col2:
+                st.subheader("Itens Vendidos (Qtd.)")
+                st.bar_chart(df_vendas['quantidade'], height=300)
+        else:
+            st.info("Nenhum item vendido encontrado nos registros.")
+
+    st.divider()
+
     # --- Seção de Produtos ---
     st.header("Gerenciador de Produtos")
     st.info("Adicione, edite ou remova produtos diretamente na tabela. Clique em 'Salvar' para aplicar as mudanças.")
@@ -193,9 +261,8 @@ def pagina_db_control():
 
     st.divider()
 
-    # --- Seção de Vendas ---
+    # --- Seção de Histórico de Vendas ---
     st.header("Histórico de Vendas")
-    vendas = repo.listar_vendas()
     if not vendas:
         st.info("Nenhum registro de venda encontrado.")
     else:

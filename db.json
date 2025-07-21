@@ -8,22 +8,22 @@
         "2": {
             "nome": "Batata Ruffles 70g",
             "preco": 7.8,
-            "estoque": 60
+            "estoque": 48
         },
         "3": {
             "nome": "Chocolate Alpino 85g",
             "preco": 6.5,
-            "estoque": 68
+            "estoque": 53
         },
         "4": {
             "nome": "Cigarro Malboro Vermelho",
             "preco": 12.0,
-            "estoque": 30
+            "estoque": 12
         },
         "5": {
             "nome": "Camiseta Blink Company",
             "preco": 89.9,
-            "estoque": 11
+            "estoque": 10
         },
         "6": {
             "nome": "Produto Sem Estoque",
@@ -123,7 +123,7 @@
         "25": {
             "nome": "Isqueiro Bic",
             "preco": 8.0,
-            "estoque": 45
+            "estoque": 34
         },
         "26": {
             "nome": "Pilhas Alcalinas AA Duracell (2 un)",
@@ -215,6 +215,65 @@
                 }
             ],
             "total_venda": 217.4
+        },
+        "4": {
+            "data_venda": "2025-07-21T18:12:52.347690",
+            "itens": [
+                {
+                    "produto_id": 25,
+                    "nome_produto": "Isqueiro Bic",
+                    "quantidade": 11,
+                    "preco_unitario": 8.0,
+                    "subtotal": 88.0
+                },
+                {
+                    "produto_id": 3,
+                    "nome_produto": "Chocolate Alpino 85g",
+                    "quantidade": 15,
+                    "preco_unitario": 6.5,
+                    "subtotal": 97.5
+                }
+            ],
+            "total_venda": 185.5
+        },
+        "5": {
+            "data_venda": "2025-07-21T18:18:00.486314",
+            "itens": [
+                {
+                    "produto_id": 5,
+                    "nome_produto": "Camiseta Blink Company",
+                    "quantidade": 1,
+                    "preco_unitario": 89.9,
+                    "subtotal": 89.9
+                }
+            ],
+            "total_venda": 89.9
+        },
+        "6": {
+            "data_venda": "2025-07-21T18:18:40.126898",
+            "itens": [
+                {
+                    "produto_id": 4,
+                    "nome_produto": "Cigarro Malboro Vermelho",
+                    "quantidade": 18,
+                    "preco_unitario": 12.0,
+                    "subtotal": 216.0
+                }
+            ],
+            "total_venda": 216.0
+        },
+        "7": {
+            "data_venda": "2025-07-21T18:28:19.617857",
+            "itens": [
+                {
+                    "produto_id": 2,
+                    "nome_produto": "Batata Ruffles 70g",
+                    "quantidade": 12,
+                    "preco_unitario": 7.8,
+                    "subtotal": 93.6
+                }
+            ],
+            "total_venda": 93.6
         }
     }
 }
