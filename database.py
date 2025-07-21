@@ -9,11 +9,11 @@ class MercadoRepositorio:
     # --- MÉTODOS PARA PRODUTOS ---
 
     def adicionar_produto(self, produto_dict):
-        self.tabela_produtos.insert(produto_dict)
-
-    def remover_produto(self, doc_id):
-        if self.tabela_produtos and self.tabela_produtos.contains(doc_id=doc_id):
-            self.tabela_produtos.remove(doc_ids=[doc_id])
+        # Remove chaves vazias ou nulas antes de inserir
+        produto_limpo = {k: v for k, v in produto_dict.items() if v is not None and k != 'doc_id'}
+        if produto_limpo.get('nome'): # Garante que o produto tenha um nome
+            return self.tabela_produtos.insert(produto_limpo)
+        return None
 
     def listar_produtos(self):
         return self.tabela_produtos.all()
@@ -26,11 +26,18 @@ class MercadoRepositorio:
 
     def atualizar_estoque(self, doc_id, quantidade_comprada):
         produto = self.buscar_produto_por_id(doc_id)
-        if produto and produto['estoque'] >= quantidade_comprada:
+        if produto and produto.get('estoque', 0) >= quantidade_comprada:
             novo_estoque = produto['estoque'] - quantidade_comprada
             self.tabela_produtos.update({'estoque': novo_estoque}, doc_ids=[doc_id])
             return True
         return False
+    
+    def atualizar_produto(self, doc_id, data):
+        self.tabela_produtos.update(data, doc_ids=[doc_id])
+
+    def deletar_produto(self, doc_id):
+        self.tabela_produtos.remove(doc_ids=[doc_id])
+
 
     # --- MÉTODOS PARA VENDAS ---
 
