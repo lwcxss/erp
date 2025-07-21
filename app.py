@@ -120,6 +120,7 @@ def pagina_adicionar_produto():
 def pagina_db_control():
     st.title("⚙️ DB Control")
     st.info("Edite ou remova produtos diretamente na tabela. Clique em 'Salvar' para aplicar as mudanças.")
+    st.text("Atenção: Alterações feitas aqui afetam diretamente o banco de dados. Essa página é destinada a usuários administradores.")
 
     produtos = repo.listar_produtos()
     
@@ -181,12 +182,12 @@ def pagina_db_control():
 st.sidebar.title("Navegação")
 pagina_selecionada = st.sidebar.radio(
     "Escolha uma página", 
-    ["Ponto de Venda", "Ver Estoque", "Adicionar Produto", "DB Control"]
+    ["Ponto de Venda", "Produtos e Estoque", "Adicionar Produto", "DB Control"]
 )
 
 if pagina_selecionada == "Ponto de Venda":
     pagina_pdv()
-elif pagina_selecionada == "Ver Estoque":
+elif pagina_selecionada == "Produtos e Estoque":
     pagina_estoque()
 elif pagina_selecionada == "Adicionar Produto":
     pagina_adicionar_produto()
