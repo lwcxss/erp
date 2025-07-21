@@ -38,7 +38,7 @@ Para rodar o projeto, siga os passos abaixo:
 
 **1. Clone o Repositório**
 ```bash
-git https://github.com/lwcxss/erp.git
+git clone https://github.com/lwcxss/erp.git
 cd <CAMINHO_DA_PASTA>
 ```
 
