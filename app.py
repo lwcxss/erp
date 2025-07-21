@@ -21,26 +21,20 @@ if 'total_venda' not in st.session_state:
 
 def pagina_pdv():
     st.title("🛒 Ponto de Venda")
-
     col1, col2 = st.columns([2, 1])
 
     with col1:
         st.header("Adicionar produtos")
         produtos = repo.listar_produtos()
-        
         if not produtos:
             st.warning("Nenhum produto cadastrado. Adicione produtos na página 'Adicionar Produto'.")
             return
-
         nomes_produtos = {p['nome']: p.doc_id for p in produtos}
         produto_selecionado_nome = st.selectbox("Selecione um produto", options=nomes_produtos.keys())
-        
         if produto_selecionado_nome:
             produto_id = nomes_produtos[produto_selecionado_nome]
             produto_obj = repo.buscar_produto_por_id(produto_id)
-
             st.info(f"Estoque disponível de {produto_obj['nome']}: **{produto_obj['estoque']}**")
-            
             max_estoque = int(produto_obj.get('estoque', 0))
             if max_estoque > 0:
                 quantidade = st.number_input("Quantidade", min_value=1, max_value=max_estoque, value=1, step=1)
@@ -75,6 +69,7 @@ def pagina_pdv():
                         st.rerun()
             
             st.subheader(f"Total: R$ {st.session_state.total_venda:.2f}")
+
             if st.button("💰 Finalizar Compra", use_container_width=True, type="primary"):
                 venda_final = {
                     'data_venda': datetime.datetime.now().isoformat(),
@@ -83,24 +78,58 @@ def pagina_pdv():
                 }
                 for item in st.session_state.carrinho:
                     repo.atualizar_estoque(item['produto_id'], item['quantidade'])
+                
                 repo.registrar_venda(venda_final)
+
                 st.success("Venda registrada com sucesso!")
+                st.balloons()
+                
                 st.session_state.carrinho = []
                 st.session_state.total_venda = 0.0
-                st.balloons()
+                
                 time.sleep(2)
                 st.rerun()
 
+
 def pagina_estoque():
-    st.title("📦 Estoque de Produtos")
+    st.title("📦 Produtos e Estoque")
     produtos = repo.listar_produtos()
+    
     if not produtos:
-        st.warning("Nenhum produto cadastrado.")
+        st.warning("Nenhum produto cadastrado para exibir.")
         return
+
     df = pd.DataFrame(produtos)
     df['id'] = [p.doc_id for p in produtos]
     df = df[['id', 'nome', 'preco', 'estoque']]
+
+    st.subheader("Filtros")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        precos = df['preco'].dropna()
+        min_preco, max_preco = (float(precos.min()), float(precos.max())) if not precos.empty else (0.0, 100.0)
+        
+        filtro_preco = st.slider(
+            "Filtrar por preço (R$):",
+            min_value=min_preco,
+            max_value=max_preco,
+            value=(min_preco, max_preco)
+        )
+        df = df[(df['preco'] >= filtro_preco[0]) & (df['preco'] <= filtro_preco[1])]
+
+    with col2:
+        st.write("")
+        st.write("")
+        apenas_com_estoque = st.checkbox("Mostrar apenas produtos com estoque", value=True)
+        if apenas_com_estoque:
+            df = df[df['estoque'] > 0]
+
     st.dataframe(df, hide_index=True, use_container_width=True)
+    
+    if df.empty:
+        st.info("Nenhum produto encontrado com os filtros aplicados.")
+
 
 def pagina_adicionar_produto():
     st.title("➕ Adicionar Novo Produto")
@@ -119,23 +148,18 @@ def pagina_adicionar_produto():
 
 def pagina_db_control():
     st.title("⚙️ DB Control")
-    st.info("Edite ou remova produtos diretamente na tabela. Clique em 'Salvar' para aplicar as mudanças.")
-    st.text("Atenção: Alterações feitas aqui afetam diretamente o banco de dados. Essa página é destinada a usuários administradores.")
-
-    produtos = repo.listar_produtos()
     
-    # Prepara os dados para o editor
+    # --- Seção de Produtos ---
+    st.header("Gerenciador de Produtos")
+    st.info("Adicione, edite ou remova produtos diretamente na tabela. Clique em 'Salvar' para aplicar as mudanças.")
+    produtos = repo.listar_produtos()
     if produtos:
         df_produtos = pd.DataFrame(produtos)
         df_produtos['doc_id'] = [p.doc_id for p in produtos]
     else:
         df_produtos = pd.DataFrame(columns=['nome', 'preco', 'estoque', 'doc_id'])
-
-    # Armazena o estado original no session_state para comparação
     if 'df_original' not in st.session_state:
         st.session_state.df_original = df_produtos.copy()
-
-    # Editor de dados
     df_editado = st.data_editor(
         df_produtos,
         column_config={
@@ -146,45 +170,57 @@ def pagina_db_control():
         },
         hide_index=True,
         use_container_width=True,
-        num_rows="dynamic", # Permite adicionar e deletar linhas
+        num_rows="dynamic",
         key="data_editor"
     )
-
-    if st.button("Salvar Alterações no Banco de Dados", type="primary"):
+    if st.button("Salvar Alterações nos Produtos", type="primary"):
         original_ids = set(st.session_state.df_original['doc_id'].dropna())
         editado_ids = set(df_editado['doc_id'].dropna())
-
         ids_deletados = original_ids - editado_ids
         for doc_id in ids_deletados:
             repo.deletar_produto(int(doc_id))
-
         for record in df_editado.to_dict('records'):
             doc_id = record.get('doc_id')
-            produto_data = {
-                'nome': record.get('nome'), 
-                'preco': record.get('preco'), 
-                'estoque': record.get('estoque')
-            }
-
-            if pd.notna(doc_id): # Se tem ID, é um item existente
+            produto_data = {'nome': record.get('nome'), 'preco': record.get('preco'), 'estoque': record.get('estoque')}
+            if pd.notna(doc_id):
                 repo.atualizar_produto(int(doc_id), produto_data)
-            else: # Se não tem ID, é um item novo
+            else:
                 repo.adicionar_produto(produto_data)
-        
-        st.success("Banco de dados atualizado com sucesso!")
+        st.success("Banco de dados de produtos atualizado!")
         del st.session_state.df_original
         time.sleep(1)
         st.rerun()
 
+    st.divider()
+
+    # --- Seção de Vendas ---
+    st.header("Histórico de Vendas")
+    vendas = repo.listar_vendas()
+    if not vendas:
+        st.info("Nenhum registro de venda encontrado.")
+    else:
+        vendas_ordenadas = sorted(vendas, key=lambda v: v.get('data_venda', ''), reverse=True)
+        for venda in vendas_ordenadas:
+            data_venda_dt = datetime.datetime.fromisoformat(venda['data_venda'])
+            data_formatada = data_venda_dt.strftime("%d/%m/%Y às %H:%M:%S")
+            total_venda = venda.get('total_venda', 0.0)
+
+            with st.expander(f"Venda de {data_formatada} - Total: R$ {total_venda:.2f}"):
+                itens_df_data = {
+                    "Produto": [item['nome_produto'] for item in venda['itens']],
+                    "Qtd.": [item['quantidade'] for item in venda['itens']],
+                    "Preço Unit.": [f"R$ {item['preco_unitario']:.2f}" for item in venda['itens']],
+                    "Subtotal": [f"R$ {item.get('subtotal', item['quantidade'] * item['preco_unitario']):.2f}" for item in venda['itens']]
+                }
+                itens_df = pd.DataFrame(itens_df_data)
+                st.dataframe(itens_df, hide_index=True, use_container_width=True)
 
 # --- NAVEGAÇÃO PRINCIPAL (SIDEBAR) ---
-
 st.sidebar.title("Navegação")
 pagina_selecionada = st.sidebar.radio(
     "Escolha uma página", 
     ["Ponto de Venda", "Produtos e Estoque", "Adicionar Produto", "DB Control"]
 )
-
 if pagina_selecionada == "Ponto de Venda":
     pagina_pdv()
 elif pagina_selecionada == "Produtos e Estoque":
