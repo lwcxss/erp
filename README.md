@@ -6,7 +6,7 @@ Este projeto foi desenvolvido para a disciplina de **Aspectos de Implementação
 
 A aplicação foi construída em Python, com uma interface web interativa desenvolvida com a biblioteca Streamlit.
 
-## O Banco de Dados Não Relacional: TinyDB
+## Sobre o TinyDB
 
 A escolha central do projeto foi utilizar um banco de dados não relacional para a persistência dos dados. Para isso, empregamos o **TinyDB**, um banco de dados NoSQL leve e serverless que armazena as informações em um único arquivo JSON.
 
@@ -21,7 +21,7 @@ Essa abordagem é ideal para o nosso caso de uso, pois o formato de documento se
 
 O sistema de mercadinho oferece as seguintes utilidades:
 
-* 🛒 **Ponto de Venda (PDV):** Uma interface web para selecionar produtos, adicionar a um carrinho e registrar uma nova venda.
+* 🛒 **PDV:** Uma interface web para selecionar produtos, adicionar a um carrinho e registrar uma nova venda.
 * 📦 **Controle de Estoque:** O sistema atualiza o estoque de um produto automaticamente após a conclusão de uma venda. É possível visualizar o estoque de todos os itens.
 * ➕ **Cadastro de Produtos:** Um formulário simples para adicionar novos produtos ao catálogo do mercado.
 * 📊 **Persistência de Dados:** Todas as informações de produtos e vendas são salvas no arquivo `db.json`, garantindo que os dados não sejam perdidos ao fechar a aplicação.
@@ -46,9 +46,6 @@ cd <CAMINHO_DA_PASTA>
 ```bash
 # Cria o ambiente
 python -m venv venv
-
-# Ativa o ambiente (Windows)
-.\venv\Scripts\activate
 
 # Ativa o ambiente (macOS/Linux)
 source venv/bin/activate
