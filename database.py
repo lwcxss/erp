@@ -6,7 +6,7 @@ class MercadoRepositorio:
         self.tabela_produtos = self.db.table('produtos')
         self.tabela_vendas = self.db.table('vendas')
 
-    # -- METOHDS --
+    # METODOS DO REPO
 
     def adicionar_produto(self, produto_dict):
         produto_limpo = {k: v for k, v in produto_dict.items() if v is not None and k != 'doc_id'}

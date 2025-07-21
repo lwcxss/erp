@@ -34,7 +34,12 @@ O sistema de mercadinho oferece as seguintes utilidades:
 
 ## Como Executar a Aplicação
 
-Para rodar o projeto, siga os passos abaixo:
+A aplicação pode ser executada utilizando a ferramenta Make apenas rodando o comando:
+```bash
+make
+```
+
+Caso haja algum problema ou prefira rodar manualmente, os passos a seguir tem o mesmo efeito:
 
 **1. Clone o Repositório**
 ```bash

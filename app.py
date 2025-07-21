@@ -4,13 +4,13 @@ from database import MercadoRepositorio
 import datetime
 import time
 
-# --- CONFIGURAÇÃO DA PÁGINA E REPOSITÓRIO ---
+# CONFIGS
 
 st.set_page_config(page_title="Mercadinho PDV", page_icon="🛒", layout="wide")
 
 repo = MercadoRepositorio()
 
-# --- GERENCIAMENTO DE ESTADO ---
+# PARTE QUE GERENCIA OS ESTAFOS
 
 if 'carrinho' not in st.session_state:
     st.session_state.carrinho = []
@@ -21,12 +21,13 @@ if 'db_control_authenticated' not in st.session_state:
 if 'add_product_authenticated' not in st.session_state:
     st.session_state.add_product_authenticated = False
 
-# --- FUNÇÕES DAS PÁGINAS ---
+# CONTROLE DA PAGINA
 
 def pagina_pdv():
     st.title("🛒 Ponto de Venda")
     col1, col2 = st.columns([2, 1])
 
+    # PARTE DE ADD PROD
     with col1:
         st.header("Adicionar produtos")
         produtos = repo.listar_produtos()
@@ -56,6 +57,7 @@ def pagina_pdv():
             else:
                 st.error("Produto sem estoque.")
 
+    # PARTE QUE GERENCIA  O CARRINHO
     with col2:
         st.header("Carrinho")
         if not st.session_state.carrinho:
@@ -107,6 +109,7 @@ def pagina_estoque():
     st.subheader("Filtros")
     col1, col2 = st.columns(2)
 
+    # PARTE DO SLIDER DE PRECO
     with col1:
         precos = df['preco'].dropna()
         min_preco, max_preco = (float(precos.min()), float(precos.max())) if not precos.empty else (0.0, 100.0)
